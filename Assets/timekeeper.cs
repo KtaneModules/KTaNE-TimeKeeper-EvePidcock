@@ -101,16 +101,19 @@ public class timekeeper : MonoBehaviour {
                 } else
                 {
                     module.HandleStrike();
+                    Debug.LogFormat("[TimeKeeper #{0}] Remember, this module does not like to wait. Since you pressed the correct answer with less than ten seconds remaining, you recieved a strike before the module got solved.", _moduleId);
                 }
                 module.HandlePass();
             } else
             {
                 Debug.LogFormat("[TimeKeeper #{0}] Correct LED pressed at wrong time. Expected time: {1}. Recieved time: {2}.", _moduleId, correctTime, timeLeft);
+                Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
                 module.HandleStrike();
             }
         } else
         {
             Debug.LogFormat("[TimeKeeper #{0}] Incorrect LED pressed. Expected {1}. Recieved: {2}.", _moduleId, correctLEDIndex+1, index+1);
+            Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
             module.HandleStrike();
         }
     }
@@ -138,7 +141,7 @@ public class timekeeper : MonoBehaviour {
         {
             letterIndexes[i] = GetIndexInAlphabet(letters[i]);
         }
-        displayedNumber = Random.Range(0, 51);
+        displayedNumber = Random.Range(1, 51);
         string text = displayedNumber.ToString();
         if(displayedNumber < 10)
         {
