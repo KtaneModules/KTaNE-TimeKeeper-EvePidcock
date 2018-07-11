@@ -59,6 +59,8 @@ public class timekeeper : MonoBehaviour {
     int litCount;
     int unlitCount;
 
+    bool TwitchZenMode; 
+
     void Start()
     {
         _moduleId = _moduleIdCounter++;
@@ -87,10 +89,19 @@ public class timekeeper : MonoBehaviour {
     void handleLEDPress(int index)
     {
         int timeLeft = (int)info.GetTime();
-        while (correctTime - timeLeft > 2)
+        if (!TwitchZenMode)
         {
-            correctTime = (int)Math.Floor((double)(correctTime / 2));
-        } 
+            while (correctTime - timeLeft > 2)
+            {
+                correctTime = (int)Math.Floor((double)(correctTime / 2));
+            }
+        } else
+        {
+            while (timeLeft - correctTime > 2)
+            {
+                correctTime *= 2;
+            }
+        }
         newAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, LEDs[index].transform);
         if (_isSolved || !_lightsOn) return;
         if (index == correctLEDIndex)
@@ -501,9 +512,18 @@ public class timekeeper : MonoBehaviour {
             int seconds = (60 * Int32.Parse(time[0])) + (Int32.Parse(time[1]));
             yield return null;
 
-            if(Mathf.FloorToInt(info.GetTime()) < seconds)
+            if (!TwitchZenMode)
             {
-                yield break;
+                if (Mathf.FloorToInt(info.GetTime()) < seconds)
+                {
+                    yield break;
+                }
+            } else
+            {
+                if(Mathf.FloorToInt(info.GetTime()) > seconds)
+                {
+                    yield break;
+                }
             }
             while (Mathf.FloorToInt(info.GetTime()) != seconds) yield return "trycancel LED wasn't pressed due to request to cancel.";
 
