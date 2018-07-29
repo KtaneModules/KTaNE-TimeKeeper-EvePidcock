@@ -15,12 +15,16 @@ public class timekeeper : MonoBehaviour {
     private int _moduleId = 0;
     private bool _isSolved = false, _lightsOn = false;
 
+    private Color redC = new Color(255, 0, 0), greenC = new Color(0, 255, 0), blueC = new Color(0, 0, 255), yellowC = new Color(255, 255, 0), whiteC = new Color(255, 255, 255);
+
     public KMSelectable LEDOne;
     public KMSelectable LEDTwo;
     public KMSelectable LEDThree;
     private KMSelectable[] LEDs;
-    public TextMesh displayedNumberText;
+    public TextMesh displayedNumberText, colorblindTextOne, colorblindTextTwo, colorblindTextThree, colorblindTextScreen;
     private int displayedNumber;
+
+    public GameObject colorblindObj;
 
     public MeshRenderer LEDOneMesh;
     public MeshRenderer LEDTwoMesh;
@@ -163,6 +167,23 @@ public class timekeeper : MonoBehaviour {
         {
             displayedNumberText.text = text;
         }
+        setupColors();
+        month = DateTime.Today.Month;
+        Debug.LogFormat("[TimeKeeper #{0}] Displayed Number: {5} in {4}. LED One color: {1}. LED Two color: {2}. LED Three color: {3}.", _moduleId, colorNames[LEDOneColor], colorNames[LEDTwoColor], colorNames[LEDThreeColor], colorNames[displayedTextColor], displayedNumber);
+        getCorrectAnswer();
+    }
+
+    void setupTextColors()
+    {
+        textColors[0] = new Color(255, 0, 0);
+        textColors[1] = new Color(0, 0, 255);
+        textColors[2] = new Color(255, 255, 0);
+        textColors[3] = new Color(0, 255, 0);
+        textColors[4] = new Color(255, 255, 255);
+    }
+
+    void setupColors()
+    {
         int rndColor = Random.Range(0, 5);
         setupTextColors();
         displayedNumberText.color = textColors[rndColor];
@@ -176,18 +197,120 @@ public class timekeeper : MonoBehaviour {
         rndColor = Random.Range(0, 6);
         LEDThreeMesh.material = colors[rndColor];
         LEDThreeColor = rndColor;
-        month = DateTime.Today.Month;
-        Debug.LogFormat("[TimeKeeper #{0}] Displayed Number: {5} in {4}. LED One color: {1}. LED Two color: {2}. LED Three color: {3}.", _moduleId, colorNames[LEDOneColor], colorNames[LEDTwoColor], colorNames[LEDThreeColor], colorNames[displayedTextColor], displayedNumber);
-        getCorrectAnswer();
-    }
 
-    void setupTextColors()
-    {
-        textColors[0] = new Color(255, 0, 0);
-        textColors[1] = new Color(0, 0, 255);
-        textColors[2] = new Color(255, 255, 0);
-        textColors[3] = new Color(0, 255, 0);
-        textColors[4] = new Color(255, 255, 255);
+        switch (LEDOneColor)//0=red,1=blue,2=yellow,3=green,4=white,5=black
+        {
+            case 0:
+                colorblindTextOne.color = redC;
+                colorblindTextOne.text = "R";
+                break;
+            case 1:
+                colorblindTextOne.color = blueC;
+                colorblindTextOne.text = "Blu";
+                break;
+            case 2:
+                colorblindTextOne.color = yellowC;
+                colorblindTextOne.text = "Y";
+                break;
+            case 3:
+                colorblindTextOne.color = greenC;
+                colorblindTextOne.text = "G";
+                break;
+            case 4:
+                colorblindTextOne.color = whiteC;
+                colorblindTextOne.text = "W";
+                break;
+            case 5:
+                colorblindTextOne.color = whiteC;
+                colorblindTextOne.text = "Bla";
+                break;
+        }
+        switch (LEDTwoColor)//0=red,1=blue,2=yellow,3=green,4=white,5=black
+        {
+            case 0:
+                colorblindTextTwo.color = redC;
+                colorblindTextTwo.text = "R";
+                break;
+            case 1:
+                colorblindTextTwo.color = blueC;
+                colorblindTextTwo.text = "Blu";
+                break;
+            case 2:
+                colorblindTextTwo.color = yellowC;
+                colorblindTextTwo.text = "Y";
+                break;
+            case 3:
+                colorblindTextTwo.color = greenC;
+                colorblindTextTwo.text = "G";
+                break;
+            case 4:
+                colorblindTextTwo.color = whiteC;
+                colorblindTextTwo.text = "W";
+                break;
+            case 5:
+                colorblindTextTwo.color = whiteC;
+                colorblindTextTwo.text = "Bla";
+                break;
+        }
+        switch (LEDThreeColor)//0=red,1=blue,2=yellow,3=green,4=white,5=black
+        {
+            case 0:
+                colorblindTextThree.color = redC;
+                colorblindTextThree.text = "R";
+                break;
+            case 1:
+                colorblindTextThree.color = blueC;
+                colorblindTextThree.text = "Blu";
+                break;
+            case 2:
+                colorblindTextThree.color = yellowC;
+                colorblindTextThree.text = "Y";
+                break;
+            case 3:
+                colorblindTextThree.color = greenC;
+                colorblindTextThree.text = "G";
+                break;
+            case 4:
+                colorblindTextThree.color = whiteC;
+                colorblindTextThree.text = "W";
+                break;
+            case 5:
+                colorblindTextThree.color = whiteC;
+                colorblindTextThree.text = "Bla";
+                break;
+        }
+        switch (displayedTextColor)//0=red,1=blue,2=yellow,3=green,4=white
+        {
+            case 0:
+                colorblindTextScreen.color = redC;
+                colorblindTextScreen.text = "Red";
+                break;
+            case 1:
+                colorblindTextScreen.color = blueC;
+                colorblindTextScreen.text = "Blue";
+                break;
+            case 2:
+                colorblindTextScreen.color = yellowC;
+                colorblindTextScreen.text = "Yellow";
+                break;
+            case 3:
+                colorblindTextScreen.color = greenC;
+                colorblindTextScreen.text = "Green";
+                break;
+            case 4:
+                colorblindTextScreen.color = whiteC;
+                colorblindTextScreen.text = "White";
+                break;
+        }
+
+        if (GetComponent<KMColorblindMode>().ColorblindModeActive)
+        {
+            colorblindObj.SetActive(true);
+            Debug.LogFormat("[TimeKeeper #{0}] Colorblind mode enabled.", _moduleId);
+        } else
+        {
+            colorblindObj.SetActive(false);
+        }
     }
 
     void getCorrectAnswer()
