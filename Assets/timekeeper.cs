@@ -621,7 +621,7 @@ public class timekeeper : MonoBehaviour {
 
 #pragma warning disable 414
 
-    private string TwitchHelpMessage = "Press the second LED at 3m14s with !{0} press 2 at 3:14. NOTE: To submit a time of 43 seconds, use '0:43', not just '43'.";
+    private string TwitchHelpMessage = "Press the second LED at 3m14s with !{0} press 2 at 3:14. NOTE: To submit a time of 43 seconds, use '0:43', not just '43'. Use !{0} colorblind to enable colorblind mode.";
 
 #pragma warning restore 414
     IEnumerator ProcessTwitchCommand(string input)
@@ -651,6 +651,12 @@ public class timekeeper : MonoBehaviour {
             while (Mathf.FloorToInt(info.GetTime()) != seconds) yield return "trycancel LED wasn't pressed due to request to cancel.";
 
             handleLEDPress(led);
+        } else if(input.Equals("colorblind"))
+        {
+            yield return null;
+            colorblindObj.SetActive(true);
+            Debug.LogFormat("[TimeKeeper #{0}] Colorblind mode enabled via TP command.", _moduleId);
+            yield break;
         }
     }
 }
