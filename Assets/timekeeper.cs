@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using KMHelper;
@@ -32,6 +33,8 @@ public class timekeeper : MonoBehaviour {
     public KMBombInfo info;
 
     public KMSelectable LEDOne;
+
+    private List<int> correctTimes = new List<int>();
 
     private int LEDOneColor;
 
@@ -96,31 +99,30 @@ public class timekeeper : MonoBehaviour {
 
     private void handleLEDPress(int index) {
         var timeLeft = (int) info.GetTime();
-        if (!TwitchZenMode)
-            while (correctTime - timeLeft > 2)
-                correctTime = (int) Math.Floor((double) (correctTime / 2));
-        else
-            while (timeLeft - correctTime > 2)
-                correctTime *= 2;
+        
         newAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.WireSnip, LEDs[index].transform);
         if (_isSolved || !_lightsOn) return;
         if (index == correctLEDIndex) {
-            if (Math.Abs(timeLeft - correctTime) <= 2) {
-                if (timeLeft > 10) {
-                    newAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, LEDs[index].transform);
-                } else {
-                    module.HandleStrike();
-                    Debug.LogFormat("[TimeKeeper #{0}] Remember, this module does not like to wait. Since you pressed the correct answer with less than ten seconds remaining, you recieved a strike before the module got solved.", _moduleId);
-                }
+            foreach (int time in correctTimes) {
+                if (Math.Abs(timeLeft - time) <= 2) {
+                    if (timeLeft > 10) {
+                        newAudio.PlayGameSoundAtTransform(KMSoundOverride.SoundEffect.CorrectChime, LEDs[index].transform);
+                    } else {
+                        module.HandleStrike();
+                        Debug.LogFormat("[TimeKeeper #{0}] Remember, this module does not like to wait. Since you pressed the correct answer with less than ten seconds remaining, you received a strike before the module got solved.", _moduleId);
+                    }
 
-                module.HandlePass();
-            } else {
-                Debug.LogFormat("[TimeKeeper #{0}] Correct LED pressed at wrong time. Expected time: {1}. Recieved time: {2}.", _moduleId, correctTime, timeLeft);
-                Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
-                module.HandleStrike();
+                    module.HandlePass();
+                    return;
+                }
             }
+
+            Debug.LogFormat("[TimeKeeper #{0}] Correct LED pressed at wrong time. Expected times: {1}. Received time: {2}.", _moduleId, string.Join(", ", correctTimes.Select((x) => x.ToString()).ToArray()), timeLeft);
+            Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
+            module.HandleStrike();
+            
         } else {
-            Debug.LogFormat("[TimeKeeper #{0}] Incorrect LED pressed. Expected {1}. Recieved: {2}.", _moduleId, correctLEDIndex + 1, index + 1);
+            Debug.LogFormat("[TimeKeeper #{0}] Incorrect LED pressed. Expected {1}. Received: {2}.", _moduleId, correctLEDIndex + 1, index + 1);
             Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
             module.HandleStrike();
         }
@@ -133,7 +135,7 @@ public class timekeeper : MonoBehaviour {
 
     private void Init() {
         correctLEDIndex = -1;
-        LEDs = new KMSelectable[3] {LEDOne, LEDTwo, LEDThree};
+        LEDs = new KMSelectable[] {LEDOne, LEDTwo, LEDThree};
         letters = info.GetSerialNumberLetters().ToArray();
         numbers = info.GetSerialNumberNumbers().ToArray();
         batteryCount = info.GetBatteryCount();
@@ -313,6 +315,15 @@ public class timekeeper : MonoBehaviour {
 
         if (correctLEDIndex == -1) getCorrectLED();
         Debug.LogFormat("[TimeKeeper #{0}] Correct LED: {1}. Correct time (in seconds): {2}.", _moduleId, correctLEDIndex + 1, correctTime);
+
+        GetMultiplesOfTime();
+    }
+
+    void GetMultiplesOfTime() {
+        correctTimes.Add((int)Math.Floor(correctTime * Math.Pow(2, 7)));
+        for (int i = 6; correctTimes.Last() > 1; i--) {
+            correctTimes.Add((int)Math.Floor(correctTime * Math.Pow(2, i)));
+        }
     }
 
     private void steps(int step) {
@@ -387,7 +398,7 @@ public class timekeeper : MonoBehaviour {
 
                 break;
             case 10:
-                if (correctTime % 23 < 2 * portCount) {
+                if (mod23() < 2 * portCount) {
                     end = true;
                     Debug.LogFormat("[TimeKeeper #{0}] Rule 10 used.", _moduleId);
                 }
@@ -561,6 +572,14 @@ public class timekeeper : MonoBehaviour {
                 return 26;
             default:
                 return 0;
+        }
+    }
+
+    int mod23() {
+        if (correctTime < 0) {
+            return (correctTime % 23 + 23) % 23;
+        } else {
+            return correctTime % 23;
         }
     }
 
