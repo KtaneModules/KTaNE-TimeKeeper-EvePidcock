@@ -1194,28 +1194,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 367198f148afea24eacec685ebcb2c96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newAudio: {fileID: 114892740731016440}
-  module: {fileID: 114685400787733278}
-  info: {fileID: 114135443570743718}
-  LEDOne: {fileID: 114756377653252982}
-  LEDTwo: {fileID: 114042760583808812}
-  LEDThree: {fileID: 114741044688927440}
-  displayedNumberText: {fileID: 102373357855330282}
-  colorblindTextOne: {fileID: 102474175752219214}
-  colorblindTextTwo: {fileID: 102056366487122734}
-  colorblindTextThree: {fileID: 102487455694921080}
-  colorblindTextScreen: {fileID: 102998468311011234}
   colorblindObj: {fileID: 1466458197713372}
-  LEDOneMesh: {fileID: 23929889893715154}
-  LEDTwoMesh: {fileID: 23663026554430322}
-  LEDThreeMesh: {fileID: 23115513516365558}
-  colors:
-  - {fileID: 2100000, guid: 4b9344d510450414da48b00861d4f9e4, type: 2}
-  - {fileID: 2100000, guid: 8bbc8db6830cea34fb84c092a93b6d28, type: 2}
-  - {fileID: 2100000, guid: 683a1b0421984b5489f2e14f65a3f568, type: 2}
-  - {fileID: 2100000, guid: 4934a46322f9ddc4587cbac16ef33029, type: 2}
-  - {fileID: 2100000, guid: 3d42e38405f5bdc40820d37469f3967b, type: 2}
-  - {fileID: 2100000, guid: 3f102edde47de1d4297fe4a7399f5fe0, type: 2}
   colorNames:
   - Red
   - Blue
@@ -1223,6 +1202,27 @@ MonoBehaviour:
   - Green
   - White
   - Black
+  colors:
+  - {fileID: 2100000, guid: 4b9344d510450414da48b00861d4f9e4, type: 2}
+  - {fileID: 2100000, guid: 8bbc8db6830cea34fb84c092a93b6d28, type: 2}
+  - {fileID: 2100000, guid: 683a1b0421984b5489f2e14f65a3f568, type: 2}
+  - {fileID: 2100000, guid: 4934a46322f9ddc4587cbac16ef33029, type: 2}
+  - {fileID: 2100000, guid: 3d42e38405f5bdc40820d37469f3967b, type: 2}
+  - {fileID: 2100000, guid: 3f102edde47de1d4297fe4a7399f5fe0, type: 2}
+  displayedNumberText: {fileID: 102373357855330282}
+  colorblindTextOne: {fileID: 102474175752219214}
+  colorblindTextTwo: {fileID: 102056366487122734}
+  colorblindTextThree: {fileID: 102487455694921080}
+  colorblindTextScreen: {fileID: 102998468311011234}
+  info: {fileID: 114135443570743718}
+  LEDOne: {fileID: 114756377653252982}
+  LEDOneMesh: {fileID: 23929889893715154}
+  LEDThree: {fileID: 114741044688927440}
+  LEDThreeMesh: {fileID: 23115513516365558}
+  LEDTwo: {fileID: 114042760583808812}
+  LEDTwoMesh: {fileID: 23663026554430322}
+  module: {fileID: 114685400787733278}
+  newAudio: {fileID: 114892740731016440}
 --- !u!114 &114429166441383568
 MonoBehaviour:
   m_ObjectHideFlags: 1
