@@ -320,8 +320,8 @@ public class timekeeper : MonoBehaviour {
     }
 
     void GetMultiplesOfTime() {
-        correctTimes.Add((int)Math.Floor(correctTime * Math.Pow(2, 7)));
-        for (int i = 6; correctTimes.Last() > 1; i--) {
+        correctTimes.Add((int)Math.Floor(correctTime * Math.Pow(2, 14)));
+        for (int i = 13; correctTimes.Last() > 1; i--) {
             correctTimes.Add((int)Math.Floor(correctTime * Math.Pow(2, i)));
         }
     }
@@ -589,12 +589,12 @@ public class timekeeper : MonoBehaviour {
 
 #pragma warning disable 414
 
-    private string TwitchHelpMessage = "Press the second LED at 3m14s with !{0} press 2 at 3:14. NOTE: To submit a time of 43 seconds, use '0:43', not just '43'. Use !{0} colorblind to enable colorblind mode.";
+    private string TwitchHelpMessage = "Press the second LED at 3m14s with !{0} press 2 at 3:14. To submit a time of 43 seconds, use '0:43', not just '43', and to submit a time of 2 hours, 52 minutes, and 48 seconds, use '172:52'. Use !{0} colorblind to enable colorblind mode.";
 
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string input) {
-        var rgx = new Regex(@"^press [123] (at|on) [0-5]?[0-9]:[0-5][0-9]$");
+        var rgx = new Regex(@"^press [123] (at|on) [0-9]?[0-9]?[0-9]:[0-5][0-9]$");
         if (rgx.IsMatch(input)) {
             var split = input.ToLowerInvariant().Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
             var time = split[3].ToLowerInvariant().Split(new[] {":"}, StringSplitOptions.RemoveEmptyEntries);
@@ -624,7 +624,7 @@ public class timekeeper : MonoBehaviour {
             while (Mathf.FloorToInt(info.GetTime()) != seconds) yield return "trycancel LED wasn't pressed due to request to cancel.";
             if (music) yield return "end waiting music";
             handleLEDPress(led);
-        } else if (input.Equals("colorblind")) {
+        } else if (input.ToLowerInvariant().Equals("colorblind")) {
             yield return null;
             colorblindObj.SetActive(true);
             Debug.LogFormat("[TimeKeeper #{0}] Colorblind mode enabled via TP command.", _moduleId);
