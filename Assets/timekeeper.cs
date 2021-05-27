@@ -118,12 +118,12 @@ public class timekeeper : MonoBehaviour {
             }
 
             Debug.LogFormat("[TimeKeeper #{0}] Correct LED pressed at wrong time. Expected times: {1}. Received time: {2}.", _moduleId, string.Join(", ", correctTimes.Select((x) => x.ToString()).ToArray()), timeLeft);
-            Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
+            Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#2652 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
             module.HandleStrike();
             
         } else {
             Debug.LogFormat("[TimeKeeper #{0}] Incorrect LED pressed. Expected {1}. Received: {2}.", _moduleId, correctLEDIndex + 1, index + 1);
-            Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#0908 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
+            Debug.LogFormat("[TimeKeeper #{0}] If you feel that this strike is an error, please don't hesitate to contact @AAces#2652 on discord with a copy of this log file so we can get this sorted out.", _moduleId);
             module.HandleStrike();
         }
     }
@@ -305,12 +305,12 @@ public class timekeeper : MonoBehaviour {
 
         if (correctTime < 0) {
             correctTime *= -1;
-            Debug.LogFormat("[TimeKeeper #{0}] Correct time less than 0, multiplying by -1.", _moduleId);
+            Debug.LogFormat("[TimeKeeper #{0}] Correct time less than 0, multiplying by -1. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
         }
 
         if (correctTime < 10) {
             correctTime += 13;
-            Debug.LogFormat("[TimeKeeper #{0}] Correct time less than 10, adding 13.", _moduleId);
+            Debug.LogFormat("[TimeKeeper #{0}] Correct time less than 10, adding 13. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
         }
 
         if (correctLEDIndex == -1) getCorrectLED();
@@ -332,130 +332,110 @@ public class timekeeper : MonoBehaviour {
                 correctTime = displayedNumber;
                 for (var i = 0; i < letterIndexes.Length; i++) correctTime += letterIndexes[i];
                 for (var n = 0; n < numbers.Length; n++) correctTime -= numbers[n];
-                Debug.LogFormat("[TimeKeeper #{0}] Rule 1 used.", _moduleId);
-                Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                Debug.LogFormat("[TimeKeeper #{0}] Rule 1 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 break;
             case 2:
                 if (LEDOneColor == white) {
                     correctTime += 14;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 2 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 2 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 3:
                 if (LEDTwoColor == displayedTextColor) {
                     correctTime += 22;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 3 = true.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 3 = true. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 } else {
                     correctTime += 13;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 3 = false.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 3 = false. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 4:
                 correctTime += 2 * portPlateCount;
-                Debug.LogFormat("[TimeKeeper #{0}] Rule 4 added " + 2 * portPlateCount, _moduleId);
-                Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                Debug.LogFormat("[TimeKeeper #{0}] Rule 4 added " + 2 * portPlateCount + ". After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 if (info.IsPortPresent(KMBombInfoExtensions.KnownPortType.DVI)) {
                     correctTime -= 9;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 4: DVI found.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 4: DVI found. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 5:
                 if (LEDOneColor == LEDTwoColor && LEDOneColor == LEDThreeColor) {
                     setCorrectLED(0);
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 5 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 5 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 6:
                 if ((displayedTextColor == red || displayedTextColor == green || displayedTextColor == blue) && LEDOneColor != yellow && LEDTwoColor != yellow && LEDThreeColor != yellow) {
                     correctTime += displayedNumber;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 6 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 6 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 7:
                 if (info.GetSolvableModuleNames().Count() > batteryCount + batteryHolderCount) {
                     correctTime -= 18;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 7 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 7 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 8:
                 if (correctTime % 2 == 0 && correctTime > 72) {
                     correctTime /= 2;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 8 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 8 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
-
                 break;
             case 9:
                 if (LEDTwoColor == green || LEDTwoColor == black) {
                     setCorrectLED(1);
                     rule9 = true;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 9 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 9 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 10:
                 if (mod23() < 2 * portCount) {
                     end = true;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 10 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 10 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 11:
                 correctTime += month;
-                Debug.LogFormat("[TimeKeeper #{0}] Rule 11 used.", _moduleId);
-                Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                Debug.LogFormat("[TimeKeeper #{0}] Rule 11 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 break;
             case 12:
                 if (displayedNumber > 23) {
                     correctTime += batteryHolderCount;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 12 = true.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 12 = true. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 } else {
                     correctTime *= batteryHolderCount;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 12 = false.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 12 = false. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 13:
                 correctTime += 2 * litCount;
                 correctTime -= 3 * unlitCount;
-                Debug.LogFormat("[TimeKeeper #{0}] Rule 13 added " + 2 * litCount + " and subtracted " + 3 * unlitCount, _moduleId);
-                Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                Debug.LogFormat("[TimeKeeper #{0}] Rule 13 added " + 2 * litCount + " and subtracted " + 3 * unlitCount + ". After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 break;
             case 14:
                 if (LEDOneColor == displayedTextColor && LEDOneColor == LEDThreeColor && LEDOneColor != LEDTwoColor) {
                     setCorrectLED(2);
                     end = true;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 14 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 14 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 15:
                 if (rule9) {
                     correctTime += 10;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 15 = true.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 15 = true. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 } else {
                     correctTime -= 19;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 15 = false.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 15 = false. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
@@ -463,74 +443,59 @@ public class timekeeper : MonoBehaviour {
                 if (correctTime < 0) {
                     correctTime *= -2;
                     end = true;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 16 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 16 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 17:
                 correctTime *= 3;
-                Debug.LogFormat("[TimeKeeper #{0}] Rule 17 used.", _moduleId);
-                Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                Debug.LogFormat("[TimeKeeper #{0}] Rule 17 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 break;
             case 18:
                 if (colorNames[LEDOneColor].Length + colorNames[LEDTwoColor].Length + colorNames[LEDThreeColor].Length > 13) {
                     correctTime += colorNames[displayedTextColor].Length;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 18 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 18 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 19:
                 if (portPlateCount == 0) {
                     end = true;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 19 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 19 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
-
                 break;
             case 20:
                 if (info.IsIndicatorPresent(KMBombInfoExtensions.KnownIndicatorLabel.FRK)) {
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 FRK out used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 FRK out used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                     break;
                 }
-
                 if (colorNames[LEDOneColor].Length > colorNames[LEDTwoColor].Length && colorNames[LEDOneColor].Length > colorNames[LEDThreeColor].Length) {
                     setCorrectLED(0);
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 LED 1 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 LED 1 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
                 else if (colorNames[LEDTwoColor].Length > colorNames[LEDOneColor].Length && colorNames[LEDTwoColor].Length > colorNames[LEDThreeColor].Length) {
                     setCorrectLED(1);
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 LED 2 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 LED 2 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
                 else if (colorNames[LEDThreeColor].Length > colorNames[LEDTwoColor].Length && colorNames[LEDThreeColor].Length > colorNames[LEDOneColor].Length) {
                     setCorrectLED(2);
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 LED 3 used.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 LED 3 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
                 else {
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 Tie", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 20 Tie. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
                 break;
             case 21:
                 if (unlitCount == 0) {
                     correctTime *= 3;
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 21 no unlit.", _moduleId);
-                    Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 21 no unlit. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                     break;
                 }
-
                 foreach (var label in info.GetOffIndicators()) {
                     correctTime += GetIndexInAlphabet(label[0]);
-                    Debug.LogFormat("[TimeKeeper #{0}] Rule 21: added " + label, _moduleId);
+                    Debug.LogFormat("[TimeKeeper #{0}] Rule 21: added " + label + ". After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
-
-                Debug.LogFormat("[TimeKeeper #{0}] Number is now {1}", _moduleId, correctTime);
                 break;
         }
     }
@@ -621,7 +586,7 @@ public class timekeeper : MonoBehaviour {
 
 #pragma warning disable 414
 
-    private string TwitchHelpMessage = "Press the second LED at 3m14s with !{0} press 2 at 3:14. To submit a time of 43 seconds, use '0:43', not just '43', and to submit a time of 2 hours, 52 minutes, and 48 seconds, use '172:52'. Use !{0} colorblind to enable colorblind mode.";
+    private string TwitchHelpMessage = "Press the second LED at 3m14s with !{0} press 2 at 3:14. To submit a time of 43 seconds, use '0:43', not just '43', and to submit a time of 2 hours, 52 minutes, and 48 seconds, use '172:48'. Use !{0} colorblind to enable colorblind mode.";
 
 #pragma warning restore 414
 
