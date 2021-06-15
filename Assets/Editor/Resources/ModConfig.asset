@@ -17,6 +17,6 @@ MonoBehaviour:
     HTML: https://ktane.timwi.de/HTML/The%20Time%20Keeper.html\r\nManual PDF: https://ktane.timwi.de/PDF/The%20Time%20Keeper.pdf\r\n\r\nGithub
     link: https://github.com/AAces/KTaNE-TimeKeeper\r\n\r\nModule idea and creation:
     AAces\r"
-  version: 1.0
+  version: 1.0.1
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 014399e2e056cf449ac73f978f87082f, type: 3}
