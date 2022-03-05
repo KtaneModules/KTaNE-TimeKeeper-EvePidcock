@@ -390,7 +390,7 @@ public class timekeeper : MonoBehaviour {
             case 9:
                 if (LEDTwoColor == green || LEDTwoColor == black) {
                     setCorrectLED(1);
-                    rule9 = true;
+                    rule9 = !(LEDOneColor == LEDTwoColor && LEDOneColor == LEDThreeColor);
                     Debug.LogFormat("[TimeKeeper #{0}] Rule 9 used. After this rule was applied, the number is now {1}.", _moduleId, correctTime);
                 }
 
